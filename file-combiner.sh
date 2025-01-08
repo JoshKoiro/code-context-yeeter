@@ -1,18 +1,18 @@
 #!/bin/bash
 
-# Function to show usage
-show_usage() {
+# Educate the normies
+yeet_usage() {
     echo "Usage: $0 <directory> [--hidden]"
-    echo "  --hidden: Include hidden files"
+    echo "  --hidden: See the forbidden files"
     exit 1
 }
 
-# Function to get comment format based on file extension
-get_comment_format() {
-    local file="$1"
-    local ext="${file##*.}"
+# Summon the appropriate comment runes
+summon_comment_runes() {
+    local scroll="$1"
+    local ancient_text="${scroll##*.}"
     
-    case "${ext,,}" in
+    case "${ancient_text,,}" in
         js|jsx|ts|tsx|java|c|cpp|h|hpp)
             echo "// NEW FILE: $2"
             ;;
@@ -31,100 +31,98 @@ get_comment_format() {
     esac
 }
 
-# Function to check if a file is binary
-is_binary() {
-    local file="$1"
-    # Use 'file' command to check if the file is binary
-    if file "$file" | grep -q "text"; then
-        return 1
+# Check if file is cursed (binary)
+is_file_cursed() {
+    local scroll="$1"
+    # Ask the ancient 'file' command for wisdom
+    if file "$scroll" | grep -q "text"; then
+        return 1  # Blessed text file
     else
-        return 0
+        return 0  # Cursed binary file
     fi
 }
 
-# Check arguments
+# Vibe check the arguments
 if [ $# -lt 1 ]; then
-    show_usage
+    yeet_usage
 fi
 
-# Process arguments
-DIR="$1"
-INCLUDE_HIDDEN=0
-OUTPUT_FILE="combined_output.md"
-PROCESSED_FILES=()
-SKIPPED_FILES=()
+# Parse the sacred texts (arguments)
+FOLDER_OF_DESTINY="$1"
+SNEAKY_MODE=0
+DESTINY_MANIFEST="combined_output.md"
+ABSOLUTE_WINS=()
+EPIC_FAILS=()
 
-# Check for --hidden flag
-for arg in "$@"; do
-    if [ "$arg" == "--hidden" ]; then
-        INCLUDE_HIDDEN=1
+# Check for sneaky mode activation
+for scroll in "$@"; do
+    if [ "$scroll" == "--hidden" ]; then
+        SNEAKY_MODE=1
     fi
 done
 
-# Check if directory exists
-if [ ! -d "$DIR" ]; then
-    echo "Error: Directory '$DIR' does not exist"
+# Make sure the chosen folder exists in this realm
+if [ ! -d "$FOLDER_OF_DESTINY" ]; then
+    echo "Error: The folder '$FOLDER_OF_DESTINY' does not exist in this dimension"
     exit 1
 fi
 
-# Create temporary file
-TMP_FILE=$(mktemp)
+# Create temporary scroll of power
+TEMP_SCROLL=$(mktemp)
 
-echo "Processing directory: $DIR"
-echo "Including hidden files: $([[ $INCLUDE_HIDDEN -eq 1 ]] && echo "yes" || echo "no")"
+echo "Initiating folder yoinking ritual: $FOLDER_OF_DESTINY"
+echo "Sneaky mode activated: $([[ $SNEAKY_MODE -eq 1 ]] && echo "yes" || echo "no")"
 
-# Function to process files
-process_files() {
-    local current_dir="$1"
-    local base_dir="$2"
+# The grand file yeeting ceremony
+yeet_files() {
+    local current_realm="$1"
+    local base_realm="$2"
     
-    # Process all files in the current directory
-    while IFS= read -r -d '' file; do
-        # Get relative path
-        local rel_path="${file#$base_dir/}"
+    while IFS= read -r -d '' scroll; do
+        local scroll_path="${scroll#$base_realm/}"
         
-        # Skip hidden files unless --hidden is specified
-        if [[ $INCLUDE_HIDDEN -eq 0 && $(basename "$file") == .* ]]; then
-            SKIPPED_FILES+=("$rel_path (hidden)")
+        # Dodge the sneaky files
+        if [[ $SNEAKY_MODE -eq 0 && $(basename "$scroll") == .* ]]; then
+            EPIC_FAILS+=("$scroll_path (too sneaky)")
             continue
         fi
         
-        # Skip if file is binary
-        if is_binary "$file"; then
-            SKIPPED_FILES+=("$rel_path (binary)")
+        # Check for cursed files
+        if is_file_cursed "$scroll"; then
+            EPIC_FAILS+=("$scroll_path (cursed binary)")
             continue
         }
         
-        # Check if file is readable
-        if [ ! -r "$file" ]; then
-            SKIPPED_FILES+=("$rel_path (permission denied)")
+        # Check scroll permissions
+        if [ ! -r "$scroll" ]; then
+            EPIC_FAILS+=("$scroll_path (no read privileges, sadge)")
             continue
         fi
         
-        # Get comment format and append to output
-        local comment=$(get_comment_format "$file" "$rel_path")
-        echo -e "\n$comment\n" >> "$TMP_FILE"
-        cat "$file" >> "$TMP_FILE"
-        PROCESSED_FILES+=("$rel_path")
+        # Summon comment runes and yeet into destiny
+        local runes=$(summon_comment_runes "$scroll" "$scroll_path")
+        echo -e "\n$runes\n" >> "$TEMP_SCROLL"
+        cat "$scroll" >> "$TEMP_SCROLL"
+        ABSOLUTE_WINS+=("$scroll_path")
         
-    done < <(find "$current_dir" -type f -print0)
+    done < <(find "$current_realm" -type f -print0)
 }
 
-# Process the directory
-process_files "$DIR" "$DIR"
+# Commence the ritual
+yeet_files "$FOLDER_OF_DESTINY" "$FOLDER_OF_DESTINY"
 
-# Move temporary file to final output
-mv "$TMP_FILE" "$OUTPUT_FILE"
+# The prophecy must be fulfilled
+mv "$TEMP_SCROLL" "$DESTINY_MANIFEST"
 
-# Print results
-echo -e "\nProcessed Files:"
-for file in "${PROCESSED_FILES[@]}"; do
-    echo "✓ $file"
+# Victory royale stats
+echo -e "\nFiles that made it (POG):"
+for scroll in "${ABSOLUTE_WINS[@]}"; do
+    echo "✨ $scroll"
 done
 
-echo -e "\nSkipped Files:"
-for file in "${SKIPPED_FILES[@]}"; do
-    echo "⨯ $file"
+echo -e "\nFiles that got rekt:"
+for scroll in "${EPIC_FAILS[@]}"; do
+    echo "💀 $scroll"
 done
 
-echo -e "\nOutput written to: $OUTPUT_FILE"
+echo -e "\nGG EZ: Output yeeted to $DESTINY_MANIFEST"
