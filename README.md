@@ -2,8 +2,6 @@
 
 For when your LLM says 'context unclear,' and you say 'bet,' then serve it a piping hot plate of code clarity.
 
-[TODO: Insert gigachad coder meme here]
-
 > "When in doubt, yeet it out—and let the LLM sort it out."
 >
 > \- Albert Einstein, (probably)
