@@ -91,7 +91,7 @@ yeet_files() {
         if is_file_cursed "$scroll"; then
             EPIC_FAILS+=("$scroll_path (cursed binary)")
             continue
-        }
+        fi
         
         # Check scroll permissions
         if [ ! -r "$scroll" ]; then
