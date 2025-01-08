@@ -1,8 +1,9 @@
-// file-combiner.js
+// file-yeet-combinator-9000.js
+// Where files go to become one with everything
 const fs = require('fs').promises;
 const path = require('path');
 
-// Define comment formats for different file types
+// The sacred scroll of commenting styles
 const commentFormats = {
   '.js': (path) => `// NEW FILE: ${path}`,
   '.jsx': (path) => `// NEW FILE: ${path}`,
@@ -25,124 +26,121 @@ const commentFormats = {
   '.cpp': (path) => `// NEW FILE: ${path}`,
   '.h': (path) => `// NEW FILE: ${path}`,
   '.hpp': (path) => `// NEW FILE: ${path}`,
-  // Default format for unknown file types
   'default': (path) => `### NEW FILE: ${path} ###`
 };
 
-// Function to check if a file is binary
-async function isBinaryFile(filePath) {
+// Checks if file is binary (the forbidden format)
+async function isFileSpicyBinary(filePath) {
   try {
-    const buffer = await fs.readFile(filePath);
-    // Check for NULL bytes in first 1024 bytes
-    for (let i = 0; i < Math.min(1024, buffer.length); i++) {
-      if (buffer[i] === 0) return true;
+    const chonkyBits = await fs.readFile(filePath);
+    // The first 1024 bytes determine if file is cursed
+    for (let i = 0; i < Math.min(1024, chonkyBits.length); i++) {
+      if (chonkyBits[i] === 0) return true;  // Found the forbidden NULLment
     }
-    return false;
+    return false;  // Safe for human consumption
   } catch (error) {
-    return true; // If we can't read the file, treat it as binary
+    return true;  // If we can't read it, it's probably cursed
   }
 }
 
-// Function to get the appropriate comment format
-function getCommentFormat(filePath) {
-  const ext = path.extname(filePath).toLowerCase();
-  return commentFormats[ext] || commentFormats.default;
+// Summons the appropriate comment format from the ancient texts
+function summonCommentFormat(filePath) {
+  const extensionLoremaster = path.extname(filePath).toLowerCase();
+  return commentFormats[extensionLoremaster] || commentFormats.default;
 }
 
-async function combineFiles(rootDir, options = { includeHidden: false }) {
-  let output = '';
-  const processedFiles = [];
-  const skippedFiles = [];
+async function yeetFilesIntoOneMegafile(rootDir, options = { yoinkHiddenFiles: false }) {
+  let megaFileContent = '';
+  const absoluteWinners = [];  // Successfully processed files
+  const bigOofs = [];  // Files that didn't make it
 
-  async function processDirectory(currentPath, relativePath = '') {
+  async function recursiveFileYoink(currentPath, relativePath = '') {
     try {
-      const entries = await fs.readdir(currentPath, { withFileTypes: true });
+      const dirLoot = await fs.readdir(currentPath, { withFileTypes: true });
 
-      for (const entry of entries) {
-        const fullPath = path.join(currentPath, entry.name);
-        const entryRelativePath = path.join(relativePath, entry.name);
+      for (const lootDrop of dirLoot) {
+        const epicPath = path.join(currentPath, lootDrop.name);
+        const lootRelativePath = path.join(relativePath, lootDrop.name);
 
-        // Skip hidden files/directories unless specifically included
-        if (!options.includeHidden && entry.name.startsWith('.')) {
-          skippedFiles.push({ path: entryRelativePath, reason: 'hidden' });
+        // Stealth check for sneaky hidden files
+        if (!options.yoinkHiddenFiles && lootDrop.name.startsWith('.')) {
+          bigOofs.push({ path: lootRelativePath, reason: 'too sneaky (hidden)' });
           continue;
         }
 
-        if (entry.isDirectory()) {
-          await processDirectory(fullPath, entryRelativePath);
-        } else if (entry.isFile()) {
+        if (lootDrop.isDirectory()) {
+          // We need to go deeper ⊂(▀¯▀⊂)
+          await recursiveFileYoink(epicPath, lootRelativePath);
+        } else if (lootDrop.isFile()) {
           try {
-            // Check if file is binary
-            if (await isBinaryFile(fullPath)) {
-              skippedFiles.push({ path: entryRelativePath, reason: 'binary' });
+            if (await isFileSpicyBinary(epicPath)) {
+              bigOofs.push({ path: lootRelativePath, reason: 'too spicy (binary)' });
               continue;
             }
 
-            const content = await fs.readFile(fullPath, 'utf8');
-            const commentFormat = getCommentFormat(fullPath);
-            output += `\n\n${commentFormat(entryRelativePath)}\n\n${content}`;
-            processedFiles.push(entryRelativePath);
+            const fileGoodies = await fs.readFile(epicPath, 'utf8');
+            const commentRitual = summonCommentFormat(epicPath);
+            megaFileContent += `\n\n${commentRitual(lootRelativePath)}\n\n${fileGoodies}`;
+            absoluteWinners.push(lootRelativePath);
           } catch (error) {
-            skippedFiles.push({ 
-              path: entryRelativePath, 
-              reason: `error: ${error.message}`
+            bigOofs.push({ 
+              path: lootRelativePath, 
+              reason: `task failed successfully: ${error.message}`
             });
           }
         }
       }
     } catch (error) {
-      console.error(`Error processing directory ${currentPath}:`, error);
+      console.error(`Big oof in directory ${currentPath}:`, error);
     }
   }
 
-  await processDirectory(rootDir);
+  await recursiveFileYoink(rootDir);
 
   return {
-    content: output.trim(),
-    processedFiles,
-    skippedFiles
+    content: megaFileContent.trim(),
+    poggers: absoluteWinners,
+    fails: bigOofs
   };
 }
 
-// CLI handling
-async function main() {
-  const args = process.argv.slice(2);
-  if (args.length === 0) {
-    console.error('Please provide a directory path');
+// CLI goes brrrrr
+async function yoloMain() {
+  const userWisdom = process.argv.slice(2);
+  if (userWisdom.length === 0) {
+    console.error('¯\\_(ツ)_/¯ Where directory?');
     process.exit(1);
   }
 
-  const dirPath = args[0];
-  const includeHidden = args.includes('--hidden');
-  const outputPath = 'combined_output.md';
+  const dirOfDestiny = userWisdom[0];
+  const sneakyMode = userWisdom.includes('--hidden');
+  const destinyManifest = 'combined_output.md';
 
   try {
-    console.log(`Processing directory: ${dirPath}`);
-    console.log(`Including hidden files: ${includeHidden}`);
+    console.log(`Initiating file yoinking ritual: ${dirOfDestiny}`);
+    console.log(`Sneaky mode activated: ${sneakyMode}`);
 
-    const result = await combineFiles(dirPath, { includeHidden });
+    const epicResult = await yeetFilesIntoOneMegafile(dirOfDestiny, { yoinkHiddenFiles: sneakyMode });
 
-    // Write output file
-    await fs.writeFile(outputPath, result.content);
+    await fs.writeFile(destinyManifest, epicResult.content);
 
-    // Log results
-    console.log('\nProcessed Files:');
-    result.processedFiles.forEach(file => console.log(`✓ ${file}`));
+    console.log('\nFiles that made it (POG):');
+    epicResult.poggers.forEach(file => console.log(`✨ ${file}`));
 
-    console.log('\nSkipped Files:');
-    result.skippedFiles.forEach(({ path, reason }) => 
-      console.log(`⨯ ${path} (${reason})`)
+    console.log('\nFiles that got rekt:');
+    epicResult.fails.forEach(({ path, reason }) => 
+      console.log(`💀 ${path} (${reason})`)
     );
 
-    console.log(`\nOutput written to: ${outputPath}`);
+    console.log(`\nGG EZ: Output yeeted to ${destinyManifest}`);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Task failed successfully:', error);
     process.exit(1);
   }
 }
 
 if (require.main === module) {
-  main();
+  yoloMain();
 }
 
-module.exports = { combineFiles };
+module.exports = { yeetFilesIntoOneMegafile };
