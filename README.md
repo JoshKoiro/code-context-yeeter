@@ -8,7 +8,7 @@ For when your LLM says 'context unclear,' and you say 'bet,' then serve it a pip
 
 ## What is this? 🤔
 
-Virgin multiple files vs Chad single context! `code-context-yeeter` takes your smol scattered files and turns them into one absolute unit, perfect for:
+`code-context-yeeter` takes your smol scattered files and turns them into one absolute unit, perfect for:
 
 - Feeding your favorite LLM some delicious context 🍽️
 - Making your code T H I C C for maximum prompt power 💪
@@ -21,34 +21,38 @@ Virgin multiple files vs Chad single context! `code-context-yeeter` takes your s
 - Skips binary files because we have standards, thank you very much
 - Different comment styles because we're fancy like that
 - Hidden file support (for your spicy secrets) 🌶️
-- Console output that sparks joy ✨
-- Available in both JavaScript and Bash (btw I use arch, no big deal)
-
-[TODO: Insert Drake meme template:
-Drake no: Copying files one by one into chat
-Drake yes: Using code-context-yeeter]
+- Console output ✨
+- Available in both JavaScript and Bash. More to come? Only if my caffeine intake hits critical levels....☕
 
 ## Why This? 🤷‍♂️
 
-You ever try explaining your project to an LLM, only for it to go full improv mode and start inventing code like it’s auditioning for Whose Line Is It Anyway? Yeah, same. When the conversation gets too long, the LLM is all like, "Context? Never heard of her." Mistakes pile up, and suddenly you’re debugging a function that doesn’t even exist.
+![alt text](memes/9g22mz.jpg)
+Have you ever try explaining your project to an LLM, only for it to go full improv mode and start inventing code like it’s auditioning for Whose Line Is It Anyway? Yeah, same. When the conversation gets too long, the LLM is all like, "Context? Never heard of her." Mistakes pile up, and suddenly you’re debugging a function that doesn’t even exist.
 
-This script is here to save your sanity by making it easy to restart fresh conversations with your project’s full context in one neat package. Now, when you ask an LLM for help, it won’t act like it’s your clueless intern on their first day. Instead, it’ll be your code-savvy BFF, ready to tackle bugs and build features without breaking a sweat.
+While I’m sure some galaxy-brained giga-chads are out there trying to quantum-entangle this problem into submission, I needed something that works faster than my attention span during a YouTube ad...
+
+This script is here to save your sanity of copy and pasting your entire codebase file by file like a Neanderthal while also making it easy to restart fresh conversations with your project’s full context in one neat package. Now, when you ask an LLM for help, it won’t act like it’s your clueless intern on their first day. Instead, it’ll be your code-savvy BFF, ready to tackle bugs and build features without breaking a sweat.
 
 Because when it comes to LLMs, context is king, and this script is the royal yeet service. 🤴🚀
 
+Say goodbye to those brain-melting AI derps where it forgets what you told it five seconds ago.
+
+![alt text](memes/9g233a.gif)
+
 ## Quick Start (Any% Speedrun) 🚀
 
-### Difficulty: Easy (Direct Execute)
+### Difficulty: EZ (Direct Execute)
 
 ```bash
 # Node.js edition
 curl -s https://raw.githubusercontent.com/JoshKoiro/code-context-yeeter/main/file-combiner.js | node - /path/to/your/project [--hidden]
-
+```
+```bash
 # Bash edition (for terminal purists)
 curl -s https://raw.githubusercontent.com/JoshKoiro/code-context-yeeter/main/file-combiner.sh | bash -s -- /path/to/your/project [--hidden]
 ```
 
-### Difficulty: Normal (Clone and Run)
+### Difficulty: Normie (Clone and Run)
 
 ```bash
 # Git clone goes brrr
@@ -66,15 +70,17 @@ chmod +x file-combiner.sh
 node file-combiner.js /path/to/your/project [--hidden]
 ```
 
-### Difficulty: Pro Gamer Move (.bashrc Edition) 😎
+### Difficulty: MLG Pro (.bashrc Edition) 😎
 
 Add these bad boys to your `.bashrc` for maximum efficiency:
 
 ```bash
-# For the zoomer JavaScript enjoyers
+# Use JavaScript like a front-end fanboy...
 alias yeet-context='f(){ curl -s https://raw.githubusercontent.com/JoshKoiro/code-context-yeeter/main/file-combiner.js | node - "$@"; unset -f f; }; f'
+```
 
-# For the bash boomers
+```bash
+# Use bash like a normal person...
 alias yeet-context-sh='f(){ curl -s https://raw.githubusercontent.com/JoshKoiro/code-context-yeeter/main/file-combiner.sh | bash -s -- "$@"; unset -f f; }; f'
 ```
 
@@ -88,8 +94,6 @@ Now you're ready to yeet with:
 ```bash
 yeet-context /path/to/your/project [--hidden]
 ```
-
-[TODO: Insert "Look at me, I'm the context now" Captain Phillips meme]
 
 ## Output 📄
 
@@ -125,27 +129,16 @@ We support more languages than your average Stack Overflow copy-paster:
 - CSS: For the "it ain't much but it's honest work" folk
 - And many more...
 
-Unknown files get the `### NEW FILE: path ###` treatment (we don't discriminate)
+Files we don’t recognize get slapped with the `### NEW FILE: path ###` tag like a lost puppy. But hey, if you wanna flex your MVP status, just open a PR and add to the comment formats supported.
 
 ## Contributing 🤝
 
 PRs are welcome! Remember:
 
-- Reject complexity, embrace yeet
-- If it works, it works
+- Reject complexity, the code doesn't care about your life story, just say what you did, what it should do, and yeet.
 - Comments are for the weak (jk please comment your code)
-
-[TODO: Insert "It ain't much but it's honest work" farmer meme]
 
 ## License 📜
 
 MIT License - Because sharing is caring, and we're not monsters.
-
-## Why the name? 🤔
-
-Because sometimes you just need to yeet your code into that context window! And by sometimes, we mean all the times.
-
-Remember: When in doubt, yeet it out! 🚀
-
-[TODO: Insert "Always has been" astronaut meme about yeeting code]
 
