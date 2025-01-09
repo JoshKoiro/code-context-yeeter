@@ -52,7 +52,7 @@ git clone https://github.com/JoshKoiro/code-context-yeeter.git
 cd code-context-yeeter
 
 # Make it executable (bash version only)
-chmod +x file-combiner.sh
+chmod +x yeetCode.sh
 ```
 
 ```bash
@@ -142,19 +142,19 @@ Example output structure (it's beautiful, I promise):
 ### Examples:
 ```bash
 # Default yeet (vanilla gameplay)
-./script.sh /path/to/dir
+./yeetCode.sh /path/to/dir
 
 # Include hidden files and folders (sus content included 😏)
-./script.sh /path/to/dir --hidden
+./yeetCode.sh /path/to/dir --hidden
 
 # The classic "it works on my machine" setup
-./script.sh /path/to/dir --ignore node_modules/* .env debug.log
+./yeetCode.sh /path/to/dir --ignore node_modules/* .env debug.log
 
 # Your project after npm install
-./script.sh /path/to/dir --ignore node_modules/* dist/* coverage/* .vscode/* package-lock.json 
+./yeetCode.sh /path/to/dir --ignore node_modules/* dist/* coverage/* .vscode/* package-lock.json 
 
 # POV: You're showing your code to your boss
-./script.sh /path/to/dir --ignore \
+./yeetCode.sh /path/to/dir --ignore \
    todos.md \          # we don't talk about the TODOs
    responsibilities.json \  # what responsibilities?
    bugs/* \           # they're features actually
@@ -162,7 +162,7 @@ Example output structure (it's beautiful, I promise):
    estimates.xlsx     # those 2-day estimates are definitely realistic
 
 # The "my code at 3am after 69 commits" speedrun strat 
-./script.sh /path/to/dir --hidden --ignore \
+./yeetCode.sh /path/to/dir --hidden --ignore \
    temp/* \              # temporary like my relationships
    uwu/* \              # notices your bulging node_modules folder
    cursed_hacks/* \     # nobody needs to see these war crimes
@@ -170,7 +170,7 @@ Example output structure (it's beautiful, I promise):
    cope.json \          # skill issue tbh
    
 # POV: When the stackoverflow copium hits different
-./script.sh /path/to/dir --ignore \
+./yeetCode.sh /path/to/dir --ignore \
    node_modules/* \          # thicc folder makes compiler go brrr
    ligma.js \               # gottem
    69_tests_failed.log \    # nice.
