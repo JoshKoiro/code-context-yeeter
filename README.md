@@ -57,12 +57,13 @@ chmod +x file-combiner.sh
 
 ```bash
 # Time to yeet!
-./file-combiner.sh /path/to/your/project [--hidden]
+# Time to yeet!
+./yeetCode.sh /path/to/your/project [--hidden] [--ignore pattern1 pattern2 ...]
 ```
 # or
 
 ```bash
-node file-combiner.js /path/to/your/project [--hidden]
+node file-combiner.js /path/to/your/project [--hidden] [--ignore pattern1 pattern2 ...]
 ```
 
 ### Difficulty: MLG Pro (add an alias to your .bashrc like a chad) 😎
@@ -84,12 +85,6 @@ Then:
 - `source ~/.bashrc` (speedrun strat)
 - Or restart terminal (casual route)
 
-Now you're ready to yeet with:
-
-```bash
-yeet-context /path/to/your/project [--hidden] [--exclude]
-```
-
 ### 🐐 Goated Features: .yeet
 
 Tired of telling your script what to yeet every time like some kind of peasant? Say no more fam. Drop a .yeet file in your project directory and watch the magic happen. It's like .gitignore but for people who understand meme culture.
@@ -97,7 +92,7 @@ Just create a file named .yeet (yes, that's it, 4 characters of pure power) and 
 
 Example .yeet scroll of power:
 
-```yeet
+```bash
 # Things to yeet into the shadow realm
 node_modules/*     # ain't nobody got space for that
 .git/*
@@ -112,7 +107,9 @@ responsibilities.json
 
 The script automagically detects your .yeet file and combines its forbidden knowledge with any command-line ignore patterns you throw at it. It's like having a bouncer for your files, but instead of checking IDs, it's checking vibes.
 Think of it as your project's personal "do not yeet" list. Perfect for when you want to keep your memes but yeet everything else into the void. 🚀
-```
+
+Plot twist: The .yeet file itself gets auto-yeeted because even sacred scrolls need their privacy. It's like the first rule of Fight Club - if you're gonna yeet, don't yeet about yeeting. 🤫
+
 ## Output 📄
 
 Creates a `combined_output.md` in the location that you ran the script. - It's thiccer than a bowl of oatmeal... 😏
@@ -135,23 +132,50 @@ Example output structure (it's beautiful, I promise):
 - Automatically yeets binary files into the void
 - Handles permission issues like a true chad
 - Empty directories get the "nothing to see here" treatment
-- Use the `--hidden` or `-h` flag for when you're feeling sneaky and want to include hidden files 🕵️‍♂️
-- Use `--ignore` or `-i` flag followed by the files and directories you would like to exclude from the output file.
+- Use the `--hidden` flag for when you're feeling sneaky and want to include hidden files 🕵️‍♂️
+- Use `--ignore` flag followed by the files and directories you would like to exclude from the output file.
     The ignore patterns support:
     - Exact file/folder names: file.txt, folder/
     - Simple wildcards: *.js, test/*
     - Nested patterns: src/tests/*.spec.js
 
-### Example:
+### Examples:
 ```bash
-# Include hidden files
+# Default yeet (vanilla gameplay)
+./script.sh /path/to/dir
+
+# Include hidden files and folders (sus content included 😏)
 ./script.sh /path/to/dir --hidden
 
-# Ignore specific files or patterns
-./script.sh /path/to/dir --ignore node_modules/* *.test.js temp/
+# The classic "it works on my machine" setup
+./script.sh /path/to/dir --ignore node_modules/* .env debug.log
 
-# Combine both flags (order doesn't matter)
-./script.sh /path/to/dir --hidden --ignore .git/ .env
+# Your project after npm install
+./script.sh /path/to/dir --ignore node_modules/* dist/* coverage/* .vscode/* package-lock.json 
+
+# POV: You're showing your code to your boss
+./script.sh /path/to/dir --ignore \
+   todos.md \          # we don't talk about the TODOs
+   responsibilities.json \  # what responsibilities?
+   bugs/* \           # they're features actually
+   deadlines.xlsx \   # time is just a concept anyway
+   estimates.xlsx     # those 2-day estimates are definitely realistic
+
+# The "my code at 3am after 69 commits" speedrun strat 
+./script.sh /path/to/dir --hidden --ignore \
+   temp/* \              # temporary like my relationships
+   uwu/* \              # notices your bulging node_modules folder
+   cursed_hacks/* \     # nobody needs to see these war crimes
+   maidenless/* \       # my senior dev said "git gud"
+   cope.json \          # skill issue tbh
+   
+# POV: When the stackoverflow copium hits different
+./script.sh /path/to/dir --ignore \
+   node_modules/* \          # thicc folder makes compiler go brrr
+   ligma.js \               # gottem
+   69_tests_failed.log \    # nice.
+   mom_come_pick_me_up/* \  # code review was brutal
+   your_mom.json \          # default export { weight: Infinity }
 ```
 
 ## Supported File Types 🗂️
