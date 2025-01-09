@@ -1,6 +1,7 @@
 # code-context-yeeter 🚀
-
 For when your LLM says 'context unclear,' and you say 'bet,' then serve it a piping hot plate of code clarity.
+
+A code file-combiner for when you need ot yeet your code into an LLM instead of going to stack overflow like a noob...
 
 > "When in doubt, yeet it out—and let the LLM sort it out."
 >
