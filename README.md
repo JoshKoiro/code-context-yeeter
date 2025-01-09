@@ -58,12 +58,13 @@ chmod +x yeetCode.sh
 
 ```bash
 # Time to yeet!
-# Time to yeet!
 ./yeetCode.sh /path/to/your/project [--hidden] [--ignore pattern1 pattern2 ...]
 ```
-# or
+
+or
 
 ```bash
+# Time to yeet!
 node file-combiner.js /path/to/your/project [--hidden] [--ignore pattern1 pattern2 ...]
 ```
 
