@@ -41,18 +41,7 @@ Say goodbye to those brain-melting AI derps where it forgets what you told it fi
 
 ## Quick Start (Any% Speedrun) 🚀
 
-### Difficulty: EZ (Direct Execute)
-
-```bash
-# Node.js edition
-curl -s https://raw.githubusercontent.com/JoshKoiro/code-context-yeeter/main/file-combiner.js | node - /path/to/your/project [--hidden]
-```
-```bash
-# Bash edition (for terminal purists)
-curl -s https://raw.githubusercontent.com/JoshKoiro/code-context-yeeter/main/file-combiner.sh | bash -s -- /path/to/your/project [--hidden]
-```
-
-### Difficulty: Normie (Clone and Run)
+### Difficulty: EZ (Clone and Run)
 
 ```bash
 # Git clone goes brrr
@@ -63,25 +52,30 @@ cd code-context-yeeter
 
 # Make it executable (bash version only)
 chmod +x file-combiner.sh
+```
 
+```bash
 # Time to yeet!
 ./file-combiner.sh /path/to/your/project [--hidden]
+```
 # or
+
+```bash
 node file-combiner.js /path/to/your/project [--hidden]
 ```
 
-### Difficulty: MLG Pro (.bashrc Edition) 😎
+### Difficulty: MLG Pro (add an alias to your .bashrc like a chad) 😎
 
 Add these bad boys to your `.bashrc` for maximum efficiency:
 
 ```bash
 # Use JavaScript like a front-end fanboy...
-alias yeet-context='f(){ curl -s https://raw.githubusercontent.com/JoshKoiro/code-context-yeeter/main/file-combiner.js | node - "$@"; unset -f f; }; f'
+alias yeetjs='/path/to/local/file-combiner.js'
 ```
 
 ```bash
 # Use bash like a normal person...
-alias yeet-context-sh='f(){ curl -s https://raw.githubusercontent.com/JoshKoiro/code-context-yeeter/main/file-combiner.sh | bash -s -- "$@"; unset -f f; }; f'
+alias yeet='/path/to/local/file-combiner.sh'
 ```
 
 Then:
@@ -92,12 +86,12 @@ Then:
 Now you're ready to yeet with:
 
 ```bash
-yeet-context /path/to/your/project [--hidden]
+yeet-context /path/to/your/project [--hidden] [--exclude]
 ```
 
 ## Output 📄
 
-Creates a `combined_output.md` that's thiccer than a bowl of oatmeal 😏
+Creates a `combined_output.md` in the location that you ran the script. - It's thiccer than a bowl of oatmeal... 😏
 
 Example output structure (it's beautiful, I promise):
 
@@ -114,7 +108,8 @@ Example output structure (it's beautiful, I promise):
 
 ## Usage Notes 🕊️
 
-- `--hidden` flag for when you're feeling sneaky 🕵️‍♂️
+- `--hidden` or `-h` flag for when you're feeling sneaky and want to include hidden files 🕵️‍♂️
+- Use `--exclude` or `-e` flag followed by the files and directories you would like to exclude from the output file.
 - Automatically yeets binary files into the void
 - Handles permission issues like a true chad
 - Empty directories get the "nothing to see here" treatment
