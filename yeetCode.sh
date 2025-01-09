@@ -43,6 +43,28 @@ is_file_cursed() {
     fi
 }
 
+# Read and parse the sacred .yeet file
+read_yeet_file() {
+    local yeet_path="$1/.yeet"
+    local patterns=()
+    
+    if [ -f "$yeet_path" ]; then
+        # Read the forbidden scroll (.yeet file)
+        while IFS= read -r line || [ -n "$line" ]; do
+            # Trim whitespace and skip empty lines/comments
+            line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            if [ -n "$line" ] && [[ ! "$line" =~ ^[[:space:]]*# ]]; then
+                # Convert Windows paths to Unix paths (just in case)
+                line=$(echo "$line" | sed 's/\\/\//g')
+                patterns+=("$line")
+            fi
+        done < "$yeet_path"
+    fi
+    
+    # Return the patterns as a space-separated string
+    echo "${patterns[*]}"
+}
+
 # Check if path matches ignore patterns
 should_ignore_path() {
     local check_path="$1"
@@ -126,6 +148,20 @@ fi
 # Make sure the chosen folder exists in this realm
 if [ ! -d "$FOLDER_OF_DESTINY" ]; then
     echo "Error: The folder '$FOLDER_OF_DESTINY' does not exist in this dimension"
+    exit 1
+fi
+
+# Read the .yeet file if it exists
+if YEET_PATTERNS=$(read_yeet_file "$FOLDER_OF_DESTINY"); then
+    if [ -n "$YEET_PATTERNS" ]; then
+        echo "Found .yeet file! Adding its forbidden knowledge to the ignore list..."
+        # Add .yeet patterns to existing ignore patterns
+        for pattern in $YEET_PATTERNS; do
+            IGNORE_PATTERNS+=("$pattern")
+        done
+    fi
+else
+    echo "Failed to read .yeet file (task failed successfully)"
     exit 1
 fi
 

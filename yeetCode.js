@@ -43,6 +43,30 @@ function summonCommentFormat(filePath) {
   return commentFormats[extensionLoremaster] || commentFormats.default;
 }
 
+async function readYeetFile(rootDir) {
+  try {
+    const yeetPath = path.join(rootDir, '.yeet');
+    const yeetContent = await fs.readFile(yeetPath, 'utf8');
+    
+    // Split by newlines and filter out empty lines and comments
+    return yeetContent
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !line.startsWith('#'))
+      .map(pattern => {
+        // Convert Windows-style paths to forward slashes
+        return pattern.replace(/\\/g, '/');
+      });
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      // No .yeet file? No problem! Return empty array like a chad
+      return [];
+    }
+    // Something else went wrong? Yeet the error up
+    throw error;
+  }
+}
+
 function shouldIgnorePath(filePath, ignorePatterns) {
   if (!ignorePatterns || ignorePatterns.length === 0) return false;
   
@@ -154,16 +178,28 @@ async function yoloMain() {
 
   const sneakyMode = userWisdom.includes('--hidden');
   
-  // Parse ignore patterns
+  // Parse ignore patterns from command line
   const ignoreIndex = userWisdom.indexOf('--ignore');
   let ignorePatterns = [];
   if (ignoreIndex !== -1 && ignoreIndex + 1 < userWisdom.length) {
-    // Get all patterns until the next flag or end of args
     let i = ignoreIndex + 1;
     while (i < userWisdom.length && !userWisdom[i].startsWith('--')) {
       ignorePatterns.push(userWisdom[i]);
       i++;
     }
+  }
+
+  // Get the forbidden knowledge from .yeet file
+  try {
+    const yeetPatterns = await readYeetFile(dirOfDestiny);
+    if (yeetPatterns.length > 0) {
+      console.log('Found .yeet file! Adding its forbidden knowledge to the ignore list...');
+      // Combine .yeet patterns with command line patterns
+      ignorePatterns = [...ignorePatterns, ...yeetPatterns];
+    }
+  } catch (error) {
+    console.error('Failed to read .yeet file (task failed successfully):', error.message);
+    process.exit(1);
   }
 
   const destinyManifest = 'combined_output.md';
@@ -172,7 +208,7 @@ async function yoloMain() {
     console.log(`Initiating file yoinking ritual: ${dirOfDestiny}`);
     console.log(`Sneaky mode activated: ${sneakyMode}`);
     if (ignorePatterns.length > 0) {
-      console.log('Ignoring patterns:', ignorePatterns);
+      console.log('Ignoring patterns (from CLI and .yeet combined):', ignorePatterns);
     }
 
     const epicResult = await yeetFilesIntoOneMegafile(dirOfDestiny, { 
@@ -201,4 +237,7 @@ if (require.main === module) {
   yoloMain();
 }
 
-module.exports = { yeetFilesIntoOneMegafile };
+module.exports = { 
+  yeetFilesIntoOneMegafile,
+  readYeetFile  // Export for testing purposes
+};
