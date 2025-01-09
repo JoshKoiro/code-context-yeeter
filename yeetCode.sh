@@ -66,7 +66,7 @@ if [ $# -lt 1 ]; then
     yeet_usage
 fi
 
-# Parse the sacred texts (arguments)
+# Initialize variables
 FOLDER_OF_DESTINY=""
 SNEAKY_MODE=0
 DESTINY_MANIFEST="combined_output.md"
@@ -95,14 +95,17 @@ while [[ $# -gt 0 ]]; do
         *)
             if [ -z "$FOLDER_OF_DESTINY" ]; then
                 FOLDER_OF_DESTINY="$1"
-            else
-                echo "Error: Multiple directories specified"
-                yeet_usage
             fi
             shift
             ;;
     esac
 done
+
+# Check if we got a directory
+if [ -z "$FOLDER_OF_DESTINY" ]; then
+    echo "Error: No directory specified"
+    yeet_usage
+fi
 
 # Make sure the chosen folder exists in this realm
 if [ ! -d "$FOLDER_OF_DESTINY" ]; then
@@ -131,7 +134,7 @@ yeet_files() {
         if should_ignore_path "$scroll_path"; then
             EPIC_FAILS+=("$scroll_path (explicitly ignored)")
             continue
-        }
+        fi
         
         # Dodge the sneaky files
         if [[ $SNEAKY_MODE -eq 0 && $(basename "$scroll") == .* ]]; then
