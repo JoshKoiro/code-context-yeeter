@@ -2,8 +2,9 @@
 
 # Educate the normies
 yeet_usage() {
-    echo "Usage: $0 <directory> [--hidden]"
+    echo "Usage: $0 <directory> [--hidden] [--ignore pattern1 pattern2 ...]"
     echo "  --hidden: See the forbidden files"
+    echo "  --ignore: Skip files/folders matching these patterns"
     exit 1
 }
 
@@ -42,23 +43,65 @@ is_file_cursed() {
     fi
 }
 
+# Check if path matches ignore patterns
+should_ignore_path() {
+    local check_path="$1"
+    local pattern
+    
+    for pattern in "${IGNORE_PATTERNS[@]}"; do
+        # Convert glob pattern to regex
+        pattern="${pattern//\./\\.}"  # Escape dots
+        pattern="${pattern//\*/.*}"   # Convert * to .*
+        pattern="${pattern//\?/.}"    # Convert ? to .
+        
+        if [[ "$check_path" =~ ^($pattern|$pattern/.*)$ ]]; then
+            return 0  # Should ignore
+        fi
+    done
+    return 1  # Should not ignore
+}
+
 # Vibe check the arguments
 if [ $# -lt 1 ]; then
     yeet_usage
 fi
 
 # Parse the sacred texts (arguments)
-FOLDER_OF_DESTINY="$1"
+FOLDER_OF_DESTINY=""
 SNEAKY_MODE=0
 DESTINY_MANIFEST="combined_output.md"
 ABSOLUTE_WINS=()
 EPIC_FAILS=()
+IGNORE_PATTERNS=()
 
-# Check for sneaky mode activation
-for scroll in "$@"; do
-    if [ "$scroll" == "--hidden" ]; then
-        SNEAKY_MODE=1
-    fi
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --hidden)
+            SNEAKY_MODE=1
+            shift
+            ;;
+        --ignore)
+            shift
+            while [[ $# -gt 0 && ! "$1" =~ ^-- ]]; do
+                IGNORE_PATTERNS+=("$1")
+                shift
+            done
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            yeet_usage
+            ;;
+        *)
+            if [ -z "$FOLDER_OF_DESTINY" ]; then
+                FOLDER_OF_DESTINY="$1"
+            else
+                echo "Error: Multiple directories specified"
+                yeet_usage
+            fi
+            shift
+            ;;
+    esac
 done
 
 # Make sure the chosen folder exists in this realm
@@ -72,6 +115,9 @@ TEMP_SCROLL=$(mktemp)
 
 echo "Initiating folder yoinking ritual: $FOLDER_OF_DESTINY"
 echo "Sneaky mode activated: $([[ $SNEAKY_MODE -eq 1 ]] && echo "yes" || echo "no")"
+if [ ${#IGNORE_PATTERNS[@]} -gt 0 ]; then
+    echo "Ignoring patterns: ${IGNORE_PATTERNS[*]}"
+fi
 
 # The grand file yeeting ceremony
 yeet_files() {
@@ -80,6 +126,12 @@ yeet_files() {
     
     while IFS= read -r -d '' scroll; do
         local scroll_path="${scroll#$base_realm/}"
+        
+        # Check ignore patterns first
+        if should_ignore_path "$scroll_path"; then
+            EPIC_FAILS+=("$scroll_path (explicitly ignored)")
+            continue
+        }
         
         # Dodge the sneaky files
         if [[ $SNEAKY_MODE -eq 0 && $(basename "$scroll") == .* ]]; then

@@ -108,11 +108,27 @@ Example output structure (it's beautiful, I promise):
 
 ## Usage Notes 🕊️
 
-- `--hidden` or `-h` flag for when you're feeling sneaky and want to include hidden files 🕵️‍♂️
-- Use `--exclude` or `-e` flag followed by the files and directories you would like to exclude from the output file.
 - Automatically yeets binary files into the void
 - Handles permission issues like a true chad
 - Empty directories get the "nothing to see here" treatment
+- Use the `--hidden` or `-h` flag for when you're feeling sneaky and want to include hidden files 🕵️‍♂️
+- Use `--ignore` or `-i` flag followed by the files and directories you would like to exclude from the output file.
+    The ignore patterns support:
+    - Exact file/folder names: file.txt, folder/
+    - Simple wildcards: *.js, test/*
+    - Nested patterns: src/tests/*.spec.js
+
+### Example:
+```bash
+# Include hidden files
+./script.sh /path/to/dir --hidden
+
+# Ignore specific files or patterns
+./script.sh /path/to/dir --ignore node_modules/ "*.test.js" temp/
+
+# Combine both flags (order doesn't matter)
+./script.sh /path/to/dir --hidden --ignore .git/ .env
+```
 
 ## Supported File Types 🗂️
 

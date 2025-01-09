@@ -1,9 +1,6 @@
-// file-yeet-combinator-9000.js
-// Where files go to become one with everything
 const fs = require('fs').promises;
 const path = require('path');
 
-// The sacred scroll of commenting styles
 const commentFormats = {
   '.js': (path) => `// NEW FILE: ${path}`,
   '.jsx': (path) => `// NEW FILE: ${path}`,
@@ -29,30 +26,44 @@ const commentFormats = {
   'default': (path) => `### NEW FILE: ${path} ###`
 };
 
-// Checks if file is binary (the forbidden format)
 async function isFileSpicyBinary(filePath) {
   try {
     const chonkyBits = await fs.readFile(filePath);
-    // The first 1024 bytes determine if file is cursed
     for (let i = 0; i < Math.min(1024, chonkyBits.length); i++) {
-      if (chonkyBits[i] === 0) return true;  // Found the forbidden NULLment
+      if (chonkyBits[i] === 0) return true;
     }
-    return false;  // Safe for human consumption
+    return false;
   } catch (error) {
-    return true;  // If we can't read it, it's probably cursed
+    return true;
   }
 }
 
-// Summons the appropriate comment format from the ancient texts
 function summonCommentFormat(filePath) {
   const extensionLoremaster = path.extname(filePath).toLowerCase();
   return commentFormats[extensionLoremaster] || commentFormats.default;
 }
 
-async function yeetFilesIntoOneMegafile(rootDir, options = { yoinkHiddenFiles: false }) {
+// Helper function to check if a path should be ignored
+function shouldIgnorePath(filePath, ignorePatterns) {
+  if (!ignorePatterns || ignorePatterns.length === 0) return false;
+  
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  return ignorePatterns.some(pattern => {
+    // Convert glob pattern to regex
+    const regexPattern = pattern
+      .replace(/\\/g, '/')
+      .replace(/\./g, '\\.')
+      .replace(/\*/g, '.*')
+      .replace(/\?/g, '.');
+    const regex = new RegExp(`^${regexPattern}$|${regexPattern}/.*`);
+    return regex.test(normalizedPath);
+  });
+}
+
+async function yeetFilesIntoOneMegafile(rootDir, options = { yoinkHiddenFiles: false, ignorePatterns: [] }) {
   let megaFileContent = '';
-  const absoluteWinners = [];  // Successfully processed files
-  const bigOofs = [];  // Files that didn't make it
+  const absoluteWinners = [];
+  const bigOofs = [];
 
   async function recursiveFileYoink(currentPath, relativePath = '') {
     try {
@@ -62,14 +73,19 @@ async function yeetFilesIntoOneMegafile(rootDir, options = { yoinkHiddenFiles: f
         const epicPath = path.join(currentPath, lootDrop.name);
         const lootRelativePath = path.join(relativePath, lootDrop.name);
 
-        // Stealth check for sneaky hidden files
+        // Check if path should be ignored
+        if (shouldIgnorePath(lootRelativePath, options.ignorePatterns)) {
+          bigOofs.push({ path: lootRelativePath, reason: 'explicitly ignored' });
+          continue;
+        }
+
+        // Handle hidden files
         if (!options.yoinkHiddenFiles && lootDrop.name.startsWith('.')) {
           bigOofs.push({ path: lootRelativePath, reason: 'too sneaky (hidden)' });
           continue;
         }
 
         if (lootDrop.isDirectory()) {
-          // We need to go deeper ⊂(▀¯▀⊂)
           await recursiveFileYoink(epicPath, lootRelativePath);
         } else if (lootDrop.isFile()) {
           try {
@@ -104,7 +120,6 @@ async function yeetFilesIntoOneMegafile(rootDir, options = { yoinkHiddenFiles: f
   };
 }
 
-// CLI goes brrrrr
 async function yoloMain() {
   const userWisdom = process.argv.slice(2);
   if (userWisdom.length === 0) {
@@ -114,13 +129,32 @@ async function yoloMain() {
 
   const dirOfDestiny = userWisdom[0];
   const sneakyMode = userWisdom.includes('--hidden');
+  
+  // Parse ignore patterns
+  const ignoreIndex = userWisdom.indexOf('--ignore');
+  let ignorePatterns = [];
+  if (ignoreIndex !== -1 && ignoreIndex + 1 < userWisdom.length) {
+    // Get all patterns until the next flag or end of args
+    let i = ignoreIndex + 1;
+    while (i < userWisdom.length && !userWisdom[i].startsWith('--')) {
+      ignorePatterns.push(userWisdom[i]);
+      i++;
+    }
+  }
+
   const destinyManifest = 'combined_output.md';
 
   try {
     console.log(`Initiating file yoinking ritual: ${dirOfDestiny}`);
     console.log(`Sneaky mode activated: ${sneakyMode}`);
+    if (ignorePatterns.length > 0) {
+      console.log('Ignoring patterns:', ignorePatterns);
+    }
 
-    const epicResult = await yeetFilesIntoOneMegafile(dirOfDestiny, { yoinkHiddenFiles: sneakyMode });
+    const epicResult = await yeetFilesIntoOneMegafile(dirOfDestiny, { 
+      yoinkHiddenFiles: sneakyMode,
+      ignorePatterns 
+    });
 
     await fs.writeFile(destinyManifest, epicResult.content);
 
