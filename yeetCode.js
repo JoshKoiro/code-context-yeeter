@@ -49,14 +49,24 @@ function shouldIgnorePath(filePath, ignorePatterns) {
   
   const normalizedPath = filePath.replace(/\\/g, '/');
   return ignorePatterns.some(pattern => {
+    // Normalize pattern (convert Windows paths if present)
+    let normalizedPattern = pattern.replace(/\\/g, '/');
+    
+    // Remove leading slash if present
+    normalizedPattern = normalizedPattern.replace(/^\//, '');
+    
     // Convert glob pattern to regex
-    const regexPattern = pattern
-      .replace(/\\/g, '/')
-      .replace(/\./g, '\\.')
-      .replace(/\*/g, '.*')
-      .replace(/\?/g, '.');
-    const regex = new RegExp(`^${regexPattern}$|${regexPattern}/.*`);
-    return regex.test(normalizedPath);
+    const regexPattern = normalizedPattern
+      .replace(/\./g, '\\.')           // Escape dots
+      .replace(/\*\*/g, '.*')          // Handle ** (match any depth)
+      .replace(/\*/g, '[^/]*')         // Handle * (match within directory)
+      .replace(/\?/g, '.')             // Handle ? (match single character)
+      .replace(/\/$/, '')              // Remove trailing slash if present
+      .replace(/([^/])$/, '$1/?.*');   // Make sure we match entire directory contents
+
+    const regex = new RegExp(`^${regexPattern}`);
+    const isMatch = regex.test(normalizedPath);
+    return isMatch;
   });
 }
 

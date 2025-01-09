@@ -48,13 +48,23 @@ should_ignore_path() {
     local check_path="$1"
     local pattern
     
+    # Remove leading slash if present
+    check_path="${check_path#/}"
+    
     for pattern in "${IGNORE_PATTERNS[@]}"; do
-        # Convert glob pattern to regex
-        pattern="${pattern//\./\\.}"  # Escape dots
-        pattern="${pattern//\*/.*}"   # Convert * to .*
-        pattern="${pattern//\?/.}"    # Convert ? to .
+        # Remove leading slash if present
+        pattern="${pattern#/}"
+        # Remove trailing slash if present
+        pattern="${pattern%/}"
         
-        if [[ "$check_path" =~ ^($pattern|$pattern/.*)$ ]]; then
+        # Convert glob pattern to regex
+        pattern="${pattern//\./\\.}"    # Escape dots
+        pattern="${pattern//\*\*/.*}"   # Handle ** (match any depth)
+        pattern="${pattern//\*/[^/]*}"  # Handle * (match within directory)
+        pattern="${pattern//\?/.}"      # Handle ? (match single character)
+        pattern="^${pattern}/?.*"       # Match entire directory contents
+        
+        if [[ "$check_path" =~ $pattern ]]; then
             return 0  # Should ignore
         fi
     done
