@@ -57,12 +57,20 @@ should_ignore_path() {
         # Remove trailing slash if present
         pattern="${pattern%/}"
         
-        # Convert glob pattern to regex
-        pattern="${pattern//\./\\.}"    # Escape dots
-        pattern="${pattern//\*\*/.*}"   # Handle ** (match any depth)
-        pattern="${pattern//\*/[^/]*}"  # Handle * (match within directory)
-        pattern="${pattern//\?/.}"      # Handle ? (match single character)
-        pattern="^${pattern}/?.*"       # Match entire directory contents
+        # If pattern ends with *, modify it to include all files
+        if [[ $pattern == *'/*' ]]; then
+            # Remove the /* from the end
+            pattern="${pattern%/*}"
+            # Add regex to match anything in this directory
+            pattern="^${pattern}(/.*)?$"
+        else
+            # Convert glob pattern to regex
+            pattern="${pattern//\./\\.}"    # Escape dots
+            pattern="${pattern//\*\*/.*}"   # Handle ** (match any depth)
+            pattern="${pattern//\*/[^/]*}"  # Handle * (match within directory)
+            pattern="${pattern//\?/.}"      # Handle ? (match single character)
+            pattern="^${pattern}/?.*"       # Match entire directory contents
+        fi
         
         if [[ "$check_path" =~ $pattern ]]; then
             return 0  # Should ignore
@@ -70,11 +78,6 @@ should_ignore_path() {
     done
     return 1  # Should not ignore
 }
-
-# Vibe check the arguments
-if [ $# -lt 1 ]; then
-    yeet_usage
-fi
 
 # Initialize variables
 FOLDER_OF_DESTINY=""
@@ -105,6 +108,9 @@ while [[ $# -gt 0 ]]; do
         *)
             if [ -z "$FOLDER_OF_DESTINY" ]; then
                 FOLDER_OF_DESTINY="$1"
+            else
+                echo "Error: Multiple directories specified"
+                yeet_usage
             fi
             shift
             ;;
@@ -140,7 +146,7 @@ yeet_files() {
     while IFS= read -r -d '' scroll; do
         local scroll_path="${scroll#$base_realm/}"
         
-        # Check ignore patterns first
+        # Check ignore patterns first - this takes precedence over everything
         if should_ignore_path "$scroll_path"; then
             EPIC_FAILS+=("$scroll_path (explicitly ignored)")
             continue

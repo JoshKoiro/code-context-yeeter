@@ -43,11 +43,12 @@ function summonCommentFormat(filePath) {
   return commentFormats[extensionLoremaster] || commentFormats.default;
 }
 
-// Helper function to check if a path should be ignored
 function shouldIgnorePath(filePath, ignorePatterns) {
   if (!ignorePatterns || ignorePatterns.length === 0) return false;
   
-  const normalizedPath = filePath.replace(/\\/g, '/');
+  // Normalize the file path, removing any leading slash
+  const normalizedPath = filePath.replace(/\\/g, '/').replace(/^\//, '');
+  
   return ignorePatterns.some(pattern => {
     // Normalize pattern (convert Windows paths if present)
     let normalizedPattern = pattern.replace(/\\/g, '/');
@@ -55,18 +56,24 @@ function shouldIgnorePath(filePath, ignorePatterns) {
     // Remove leading slash if present
     normalizedPattern = normalizedPattern.replace(/^\//, '');
     
-    // Convert glob pattern to regex
-    const regexPattern = normalizedPattern
-      .replace(/\./g, '\\.')           // Escape dots
-      .replace(/\*\*/g, '.*')          // Handle ** (match any depth)
-      .replace(/\*/g, '[^/]*')         // Handle * (match within directory)
-      .replace(/\?/g, '.')             // Handle ? (match single character)
-      .replace(/\/$/, '')              // Remove trailing slash if present
-      .replace(/([^/])$/, '$1/?.*');   // Make sure we match entire directory contents
+    // If pattern ends with /*, modify it to include all files (including hidden)
+    if (normalizedPattern.endsWith('/*')) {
+      normalizedPattern = normalizedPattern.slice(0, -2);
+      // Match anything in this directory or its subdirectories
+      normalizedPattern += '(/.*)?$';
+    } else {
+      // Convert glob pattern to regex
+      normalizedPattern = normalizedPattern
+        .replace(/\./g, '\\.')           // Escape dots
+        .replace(/\*\*/g, '.*')          // Handle ** (match any depth)
+        .replace(/\*/g, '[^/]*')         // Handle * (match within directory)
+        .replace(/\?/g, '.')             // Handle ? (match single character)
+        .replace(/\/$/, '')              // Remove trailing slash if present
+        .replace(/([^/])$/, '$1/?.*');   // Make sure we match entire directory contents
+    }
 
-    const regex = new RegExp(`^${regexPattern}`);
-    const isMatch = regex.test(normalizedPath);
-    return isMatch;
+    const regex = new RegExp(`^${normalizedPattern}`);
+    return regex.test(normalizedPath);
   });
 }
 
@@ -83,7 +90,7 @@ async function yeetFilesIntoOneMegafile(rootDir, options = { yoinkHiddenFiles: f
         const epicPath = path.join(currentPath, lootDrop.name);
         const lootRelativePath = path.join(relativePath, lootDrop.name);
 
-        // Check if path should be ignored
+        // Check if path should be ignored first - this takes precedence over everything
         if (shouldIgnorePath(lootRelativePath, options.ignorePatterns)) {
           bigOofs.push({ path: lootRelativePath, reason: 'explicitly ignored' });
           continue;
