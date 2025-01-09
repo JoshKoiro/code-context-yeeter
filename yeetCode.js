@@ -114,6 +114,12 @@ async function yeetFilesIntoOneMegafile(rootDir, options = { yoinkHiddenFiles: f
         const epicPath = path.join(currentPath, lootDrop.name);
         const lootRelativePath = path.join(relativePath, lootDrop.name);
 
+         // Auto-ignore .yeet file
+         if (lootDrop.name === '.yeet') {
+          bigOofs.push({ path: lootRelativePath, reason: 'sacred scroll (.yeet file)' });
+          continue;
+        }
+
         // Check if path should be ignored first - this takes precedence over everything
         if (shouldIgnorePath(lootRelativePath, options.ignorePatterns)) {
           bigOofs.push({ path: lootRelativePath, reason: 'explicitly ignored' });
@@ -218,13 +224,13 @@ async function yoloMain() {
 
     await fs.writeFile(destinyManifest, epicResult.content);
 
-    console.log('\nFiles that made it (POG):');
-    epicResult.poggers.forEach(file => console.log(`✨ ${file}`));
-
     console.log('\nFiles that got rekt:');
     epicResult.fails.forEach(({ path, reason }) => 
       console.log(`💀 ${path} (${reason})`)
     );
+
+    console.log('\nFiles that made it (POG):');
+    epicResult.poggers.forEach(file => console.log(`✨ ${file}`));
 
     console.log(`\nGG EZ: Output yeeted to ${destinyManifest}`);
   } catch (error) {

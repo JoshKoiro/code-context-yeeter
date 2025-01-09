@@ -181,6 +181,12 @@ yeet_files() {
     
     while IFS= read -r -d '' scroll; do
         local scroll_path="${scroll#$base_realm/}"
+
+         # Auto-ignore .yeet file
+        if [ "$(basename "$scroll")" = ".yeet" ]; then
+            EPIC_FAILS+=("$scroll_path (sacred scroll (.yeet file))")
+            continue
+        fi
         
         # Check ignore patterns first - this takes precedence over everything
         if should_ignore_path "$scroll_path"; then
@@ -222,14 +228,15 @@ yeet_files "$FOLDER_OF_DESTINY" "$FOLDER_OF_DESTINY"
 mv "$TEMP_SCROLL" "$DESTINY_MANIFEST"
 
 # Victory royale stats
-echo -e "\nFiles that made it (POG):"
-for scroll in "${ABSOLUTE_WINS[@]}"; do
-    echo "✨ $scroll"
-done
 
 echo -e "\nFiles that got rekt:"
 for scroll in "${EPIC_FAILS[@]}"; do
     echo "💀 $scroll"
+done
+
+echo -e "\nFiles that made it (POG):"
+for scroll in "${ABSOLUTE_WINS[@]}"; do
+    echo "✨ $scroll"
 done
 
 echo -e "\nGG EZ: Output yeeted to $DESTINY_MANIFEST"
