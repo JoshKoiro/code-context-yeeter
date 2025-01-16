@@ -1,0 +1,19 @@
+{
+  "name": "code-context-yeeter",
+  "version": "1.0.2",
+  "description": "For when your LLM says 'context unclear,' and you say 'bet,' then serve it a piping hot plate of code clarity.",
+  "main": "yeetCode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoshKoiro/code-context-yeeter.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JoshKoiro/code-context-yeeter/issues"
+  },
+  "homepage": "https://github.com/JoshKoiro/code-context-yeeter#readme"
+}
