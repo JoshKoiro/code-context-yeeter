@@ -43,7 +43,7 @@ Say goodbye to those brain-melting AI derps where it forgets what you told it fi
 
 ## Quick Start (Any% Speedrun) 🚀
 
-### Difficulty: EZ (Clone and Run)
+### Difficulty: Noob (Clone and Run)
 
 ```bash
 # Git clone goes brrr
@@ -68,7 +68,29 @@ or
 node file-combiner.js /path/to/your/project [--hidden] [--ignore pattern1 pattern2 ...]
 ```
 
+### Difficulty: EZ (Add as Dev Dependency)
+
+Using a node project:
+
+```bash
+npm install --dev git+https://github.com/JoshKoiro/code-context-yeeter.git
+```
+
+Then whip up a fancy yeet script to add to your `package.json`
+
+```json
+{
+  "scripts": {
+    "yeet": "node node_modules/code-context-yeeter/yeetCode.js"
+  }
+}
+```
+
+Then all you have to do when you want to yeet all your project files is a simple `npm run yeet`
+
 ### Difficulty: MLG Pro (add an alias to your .bashrc like a chad) 😎
+
+If mediocrity is not enough for you, and you want some real coding drip, then install the script globally so you can yeet anything from anywhere.
 
 Add these bad boys to your `.bashrc` for maximum efficiency:
 
