@@ -1,6 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 
+// All the epic comment formats remain unchanged
 const commentFormats = {
   '.js': (path) => `// NEW FILE: ${path}`,
   '.jsx': (path) => `// NEW FILE: ${path}`,
@@ -114,9 +115,13 @@ async function yeetFilesIntoOneMegafile(rootDir, options = { yoinkHiddenFiles: f
         const epicPath = path.join(currentPath, lootDrop.name);
         const lootRelativePath = path.join(relativePath, lootDrop.name);
 
-         // Auto-ignore .yeet file
-         if (lootDrop.name === '.yeet') {
+        // Auto-ignore our sacred scrolls
+        if (lootDrop.name === '.yeet') {
           bigOofs.push({ path: lootRelativePath, reason: 'sacred scroll (.yeet file)' });
+          continue;
+        }
+        if (lootDrop.name === 'yeet_manifest.md') {
+          bigOofs.push({ path: lootRelativePath, reason: 'previous yeet manifest (no yeet-ception allowed)' });
           continue;
         }
 
@@ -208,7 +213,7 @@ async function yoloMain() {
     process.exit(1);
   }
 
-  const destinyManifest = 'combined_output.md';
+  const destinyManifest = 'yeet_manifest.md';  // The sacred destination has been renamed!
 
   try {
     console.log(`Initiating file yoinking ritual: ${dirOfDestiny}`);

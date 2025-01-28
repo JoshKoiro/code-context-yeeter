@@ -104,7 +104,7 @@ should_ignore_path() {
 # Initialize variables
 FOLDER_OF_DESTINY=""
 SNEAKY_MODE=0
-DESTINY_MANIFEST="combined_output.md"
+DESTINY_MANIFEST="yeet_manifest.md"  # The sacred destination has been renamed!
 ABSOLUTE_WINS=()
 EPIC_FAILS=()
 IGNORE_PATTERNS=()
@@ -182,9 +182,15 @@ yeet_files() {
     while IFS= read -r -d '' scroll; do
         local scroll_path="${scroll#$base_realm/}"
 
-         # Auto-ignore .yeet file
+        # Auto-ignore our sacred scrolls
         if [ "$(basename "$scroll")" = ".yeet" ]; then
             EPIC_FAILS+=("$scroll_path (sacred scroll (.yeet file))")
+            continue
+        fi
+        
+        # No yeet-ception allowed!
+        if [ "$(basename "$scroll")" = "yeet_manifest.md" ]; then
+            EPIC_FAILS+=("$scroll_path (previous yeet manifest (no yeet-ception allowed))")
             continue
         fi
         
@@ -228,7 +234,6 @@ yeet_files "$FOLDER_OF_DESTINY" "$FOLDER_OF_DESTINY"
 mv "$TEMP_SCROLL" "$DESTINY_MANIFEST"
 
 # Victory royale stats
-
 echo -e "\nFiles that got rekt:"
 for scroll in "${EPIC_FAILS[@]}"; do
     echo "💀 $scroll"
